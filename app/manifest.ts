@@ -1,6 +1,14 @@
 import type { MetadataRoute } from 'next'
- 
-export default function manifest(): MetadataRoute.Manifest {
+
+// Расширяем стандартный интерфейс Manifest для добавления полей Яндекса
+interface ExtendedManifest extends MetadataRoute.Manifest {
+  yandex?: {
+    pwa_version: string;
+    ui_theme: 'light' | 'dark' | 'system';
+  };
+}
+
+export default function manifest(): ExtendedManifest {
   return {
     name: 'Next.js PWA',
     short_name: 'NextPWA',
@@ -21,5 +29,10 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
       },
     ],
+    // Добавляем специфичные поля для Яндекса
+    yandex: {
+      pwa_version: '1.0',
+      ui_theme: 'dark',
+    },
   }
 }

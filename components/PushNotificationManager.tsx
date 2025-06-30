@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react"
 import urlBase64ToUint8Array from "./urlBase64ToUint8Array"
 import { sendNotification, subscribeUser, unsubscribeUser } from "@/app/action"
@@ -8,6 +9,12 @@ export default function PushNotificationManager() {
     null
   )
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+  const isYandex = navigator.userAgent.includes('YaBrowser');
+  const isSupported = ('serviceWorker' in navigator && 'PushManager' in window) || isYandex;
+  setIsSupported(isSupported);
+}, []);
  
   useEffect(() => {
     if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -17,13 +24,20 @@ export default function PushNotificationManager() {
   }, [])
  
   async function registerServiceWorker() {
+  try {
     const registration = await navigator.serviceWorker.register('/sw.js', {
       scope: '/',
       updateViaCache: 'none',
-    })
+    });
     const sub = await registration.pushManager.getSubscription()
     setSubscription(sub)
+    console.log('ServiceWorker registered');
+    return registration;
+  } catch (error) {
+    console.error('ServiceWorker registration failed:', error);
   }
+}
+
  
   async function subscribeToPush() {
     const registration = await navigator.serviceWorker.ready

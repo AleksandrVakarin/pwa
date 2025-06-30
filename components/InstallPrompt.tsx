@@ -5,25 +5,31 @@ import PushNotificationManager from "./PushNotificationManager"
 function InstallPrompt() {
   const [isIOS, setIsIOS] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
- 
+  const [isYandex, setIsYandex] = useState(false)
+
   useEffect(() => {
-    // Убрали any, заменив на более безопасную проверку
+    setIsYandex(navigator.userAgent.includes('YaBrowser'))
     setIsIOS(
       /iPad|iPhone|iPod/.test(navigator.userAgent) && 
       !(window as Window & { MSStream?: unknown }).MSStream
     )
- 
     setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
   }, [])
- 
+
   if (isStandalone) {
     return null
   }
- 
+
   return (
     <div>
-      <h3>Install App</h3>
       <button>Add to Home Screen</button>
+      <h3>Install App</h3>
+      {isYandex && (
+        <div className="yandex-install-hint">
+          Нажмите ⋮ → &quot;Добавить на экран&quot;
+        </div>
+      )}
+      
       {isIOS && (
         <p>
           To install this app on your iOS device, tap the share button
@@ -35,7 +41,7 @@ function InstallPrompt() {
     </div>
   )
 }
- 
+
 export default function Page() {
   return (
     <div>
