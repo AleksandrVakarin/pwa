@@ -3,7 +3,7 @@
 import webpush from 'web-push'
 
 webpush.setVapidDetails(
-  'https://sports-livid.vercel.app/',
+  'https://pwa-vert-phi.vercel.app/',
   process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
   process.env.VAPID_PRIVATE_KEY!
 )
